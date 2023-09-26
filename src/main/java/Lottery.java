@@ -7,13 +7,14 @@ public class Lottery {
     private List<String> days;
 
     public Lottery() {
-
+        this.participants = new ArrayList<Person>();
     }
 
     public Lottery(List<String> days) {
         this.participants = new ArrayList<Person>();
         this.days = days;
     }
+
 
     boolean isRun = true;
 
@@ -36,7 +37,10 @@ public class Lottery {
     }
 
     public void listParticipants(){
-        this.participants.forEach(Person::getName);
+        System.out.println("Katılımcı Listesi:");
+        for (Person participant : participants) {
+            System.out.println(participant.getName());
+        }
 
     }
 
