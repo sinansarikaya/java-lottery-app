@@ -19,9 +19,12 @@ public class Lottery {
 
     public void addParticipant() {
         Scanner inp = new Scanner(System.in);
+        System.out.println("Isim Giriniz...");
         String name = inp.nextLine();
 
-        Person participant = new Person(0,name);
+        Person participant = new Person(name);
+        this.participants.add(participant);
+
 
     }
 
@@ -33,7 +36,8 @@ public class Lottery {
     }
 
     public void listParticipants(){
-        this.participants.forEach(t->t);
+        this.participants.forEach(Person::getName);
+
     }
 
     public static void distributeParticipantsToWeekDays() {
@@ -67,9 +71,12 @@ public class Lottery {
                     System.out.println("selectRandomPerson() = " + selectRandomPerson());
                     break;
                 case 3:
-                    distributeParticipantsToWeekDays();
+                    listParticipants();
                     break;
                 case 4:
+                    distributeParticipantsToWeekDays();
+                    break;
+                case 5:
                     saveResult();
                     break;
                 case 0:
