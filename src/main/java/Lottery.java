@@ -4,17 +4,14 @@ public class Lottery {
     //TODO: fix it
     //   public Scanner inp = new Scanner(System.in);
     private List<Person> participants;
-    private List<String> days;
+    List<String> days;
+    List<String> defNames;
 
     public Lottery() {
         this.participants = new ArrayList<Person>();
+        this.days = new ArrayList<>(Arrays.asList("Pazartesi", "Sali", "Carsamba", "Persembe", "Cuma", "Cumartesi"));
+        this.defNames = new ArrayList<>(Arrays.asList("Sinan", "Eda", "Emrullah", "Ümmü", "Cahit"));
     }
-
-    public Lottery(List<String> days) {
-        this.participants = new ArrayList<Person>();
-        this.days = days;
-    }
-
 
     boolean isRun = true;
 
@@ -25,26 +22,42 @@ public class Lottery {
 
         Person participant = new Person(name);
         this.participants.add(participant);
-
-
+        System.out.println("Isim Eklendi...");
     }
 
-    public static int selectRandomPerson() {
+    public void defaultNames() {
+        for (String w : defNames) {
+            Person participant1 = new Person(w);
+            this.participants.add(participant1);
+        }
+    }
+
+    public void selectRandomPerson() {
         Random random = new Random();
-        int randNum = random.nextInt(11);
+        int randNum = random.nextInt(this.participants.size());
+        Person winner = participants.get(randNum);
+        System.out.println("Winner :" + winner.getName());
 
-        return randNum;
     }
 
-    public void listParticipants(){
+    public void listParticipants() {
         System.out.println("Katılımcı Listesi:");
         for (Person participant : participants) {
             System.out.println(participant.getName());
         }
+        System.out.println(this.participants.size());
 
     }
 
-    public static void distributeParticipantsToWeekDays() {
+    public void distributeParticipantsToWeekDays() {
+
+        Collections.shuffle(this.participants);
+        int dayIndex = 0;
+        for (Person participant : participants) {
+            String day = days.get(dayIndex);
+            System.out.println(participant.getName() + " " + day);
+            dayIndex = (dayIndex + 1) % days.size();
+        }
 
     }
 
@@ -72,7 +85,7 @@ public class Lottery {
                     addParticipant();
                     break;
                 case 2:
-                    System.out.println("selectRandomPerson() = " + selectRandomPerson());
+                    selectRandomPerson();
                     break;
                 case 3:
                     listParticipants();
@@ -94,7 +107,9 @@ public class Lottery {
     }
 
     public void run() {
+        defaultNames();
         displayMenu();
     }
+
 
 }
