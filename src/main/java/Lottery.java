@@ -70,13 +70,14 @@ public class Lottery {
         Scanner inp = new Scanner(System.in);
 
         while (isRun) {
-            System.out.println("MENU");
-            System.out.println("1. Yeni Katılımcı Ekle");
-            System.out.println("2. Çekilişi Başlat");
-            System.out.println("3. Katılımcıları Listele");
-            System.out.println("4. Katılımcıları Günlere Dağıt");
-            System.out.println("5. Sonuçları Kaydet");
-            System.out.println("0. Çıkış");
+            ColorPrinter.printColorfulText("MENU", ColorPrinter.GREEN);
+            ColorPrinter.printColorfulText("1. Yeni Katılımcı Ekle", ColorPrinter.YELLOW);
+            ColorPrinter.printColorfulText("2. Çekilişi Başlat", ColorPrinter.YELLOW);
+            ColorPrinter.printColorfulText("3. Katılımcıları Listele", ColorPrinter.YELLOW);
+            ColorPrinter.printColorfulText("4. Katılımcıları Günlere Dağıt", ColorPrinter.YELLOW);
+            ColorPrinter.printColorfulText("5. Sonuçları Kaydet", ColorPrinter.YELLOW);
+            ColorPrinter.printColorfulText("0. Çıkış", ColorPrinter.YELLOW);
+
 
             int choice = inp.nextInt();
 
