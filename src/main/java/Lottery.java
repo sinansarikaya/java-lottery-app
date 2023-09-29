@@ -4,6 +4,8 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.FileOutputStream;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class Lottery {
@@ -44,7 +46,7 @@ public class Lottery {
         Random random = new Random();
         int randNum = random.nextInt(this.participants.size());
         Person winner = participants.get(randNum);
-        System.out.println("Winner :" + winner.getName());
+        System.out.println("Winner : " + winner.getName());
 
     }
 
@@ -59,23 +61,38 @@ public class Lottery {
     }
 
     public void distributeParticipantsToWeekDays() {
+        LocalDate dateNow = LocalDate.now();
+
+        DateTimeFormatter dtft = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        DateTimeFormatter dtfd = DateTimeFormatter.ofPattern("EEEE");
+
         Collections.shuffle(this.participants);
+
         int dayIndex = 0;
 
-        // Initialize the participantData list
+        //Initialize the participantData list
         participantData = new ArrayList<>();
 
         for (Person participant : participants) {
+            if(dtfd.format(dateNow).equals("Sunday")){
+                dateNow = dateNow.plusDays(1);
+            }
+            String formattedMyCurrentDate = dtft.format(dateNow);
+            String formattedMyCurrentDay = dtfd.format(dateNow);
+
             String day = days.get(dayIndex);
-            System.out.println(participant.getName() + " " + day);
+            System.out.println(participant.getName() + " " + formattedMyCurrentDay);
 
             // Add participant data to the list
-            Map<String, String> data = new HashMap<>();
+            Map<String, String> data = new LinkedHashMap<>();
+            data.put("Day", formattedMyCurrentDay);
             data.put("Name", participant.getName());
-            data.put("Day", day);
-            participantData.add(data);
+            data.put("Date", formattedMyCurrentDate);
 
-            dayIndex = (dayIndex + 1) % days.size();
+            participantData.add(data);
+            dateNow = dateNow.plusDays(1);
+
+//            dayIndex = (dayIndex + 1) % days.size();
         }
     }
 
@@ -98,6 +115,7 @@ public class Lottery {
 
         try (FileOutputStream outputStream = new FileOutputStream("./participantWorkbook.xlsx")) {
             wb.write(outputStream);
+            ColorPrinter.printColorfulText("Sonuçlar excel dosyasına kayıt edildi", ColorPrinter.GREEN);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -105,8 +123,8 @@ public class Lottery {
 
     private static void createHeaderRow(XSSFSheet ws) {
         Row row = ws.createRow(0);
-        List<String> headers = Arrays.asList("Day", "Name");
-        for(int i = 0; i<headers.size(); i++){
+        List<String> headers = Arrays.asList("Day", "Name", "Date");
+        for (int i = 0; i < headers.size(); i++) {
             Cell headerCell = row.createCell(i);
             headerCell.setCellValue(headers.get(i));
         }
@@ -117,7 +135,7 @@ public class Lottery {
         Scanner inp = new Scanner(System.in);
 
         while (isRun) {
-            ColorPrinter.printColorfulText("MENU", ColorPrinter.PINK );
+            ColorPrinter.printColorfulText("MENU", ColorPrinter.PINK);
             ColorPrinter.printColorfulText("1. Yeni Katılımcı Ekle", ColorPrinter.YELLOW);
             ColorPrinter.printColorfulText("2. Çekilişi Başlat", ColorPrinter.YELLOW);
             ColorPrinter.printColorfulText("3. Katılımcıları Listele", ColorPrinter.YELLOW);

@@ -5,12 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1c2bf349-4a2e-4fe0-9a00-51d010813638" name="Changes" comment="ADD: ColorPrinter Class">
-      <change afterPath="$PROJECT_DIR$/participantWorkbook.xlsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/Workbook.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/~$participantWorkbook.xlsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ColorPrinter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ColorPrinter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/participantWorkbook.xlsx" beforeDir="false" afterPath="$PROJECT_DIR$/participantWorkbook.xlsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Lottery.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Lottery.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
