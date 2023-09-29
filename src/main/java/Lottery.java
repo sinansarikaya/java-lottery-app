@@ -1,8 +1,16 @@
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+import java.io.FileOutputStream;
 import java.util.*;
 
 public class Lottery {
     //TODO: fix it
     //   public Scanner inp = new Scanner(System.in);
+
+    private List<Map<String, String>> participantData; // Data structure to store participant data
     private List<Person> participants;
     List<String> days;
     List<String> defNames;
@@ -41,6 +49,7 @@ public class Lottery {
     }
 
     public void listParticipants() {
+        //ColorPrinter.printColorfulText("DENEME"+" ".repeat(5),ColorPrinter.AQUA,ColorPrinter.MAGENTA_BACKGROUND);
         System.out.println("Katılımcı Listesi:");
         for (Person participant : participants) {
             System.out.println(participant.getName());
@@ -50,19 +59,57 @@ public class Lottery {
     }
 
     public void distributeParticipantsToWeekDays() {
-
         Collections.shuffle(this.participants);
         int dayIndex = 0;
+
+        // Initialize the participantData list
+        participantData = new ArrayList<>();
+
         for (Person participant : participants) {
             String day = days.get(dayIndex);
             System.out.println(participant.getName() + " " + day);
+
+            // Add participant data to the list
+            Map<String, String> data = new HashMap<>();
+            data.put("Name", participant.getName());
+            data.put("Day", day);
+            participantData.add(data);
+
             dayIndex = (dayIndex + 1) % days.size();
         }
-
     }
 
-    public static void saveResult() {
+    public void saveResult() {
+        XSSFWorkbook wb = new XSSFWorkbook();
+        XSSFSheet ws = wb.createSheet();
 
+        createHeaderRow(ws);
+        int rowNumber = 1;
+
+        // Iterate through participant data and write to Excel
+        for (Map<String, String> data : participantData) {
+            Row row = ws.createRow(rowNumber++);
+            int columnNumber = 0;
+            for (String key : data.keySet()) {
+                Cell cell = row.createCell(columnNumber++);
+                cell.setCellValue(data.get(key));
+            }
+        }
+
+        try (FileOutputStream outputStream = new FileOutputStream("./participantWorkbook.xlsx")) {
+            wb.write(outputStream);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static void createHeaderRow(XSSFSheet ws) {
+        Row row = ws.createRow(0);
+        List<String> headers = Arrays.asList("Day", "Name");
+        for(int i = 0; i<headers.size(); i++){
+            Cell headerCell = row.createCell(i);
+            headerCell.setCellValue(headers.get(i));
+        }
     }
 
     public void displayMenu() {
@@ -70,7 +117,7 @@ public class Lottery {
         Scanner inp = new Scanner(System.in);
 
         while (isRun) {
-            ColorPrinter.printColorfulText("MENU", ColorPrinter.GREEN);
+            ColorPrinter.printColorfulText("MENU", ColorPrinter.PINK );
             ColorPrinter.printColorfulText("1. Yeni Katılımcı Ekle", ColorPrinter.YELLOW);
             ColorPrinter.printColorfulText("2. Çekilişi Başlat", ColorPrinter.YELLOW);
             ColorPrinter.printColorfulText("3. Katılımcıları Listele", ColorPrinter.YELLOW);

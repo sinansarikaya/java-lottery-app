@@ -4,9 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1c2bf349-4a2e-4fe0-9a00-51d010813638" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/ColorPrinter.java" afterDir="false" />
+    <list default="true" id="1c2bf349-4a2e-4fe0-9a00-51d010813638" name="Changes" comment="ADD: ColorPrinter Class">
+      <change afterPath="$PROJECT_DIR$/participantWorkbook.xlsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/Workbook.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/~$participantWorkbook.xlsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ColorPrinter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ColorPrinter.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Lottery.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Lottery.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -38,14 +42,22 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "/Users/sinansarikaya/IdeaProjects/LotteryApp",
+    "settings.editor.selected.configurable": "preferences.keymap"
   }
-}</component>
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+    </key>
+  </component>
   <component name="RunManager" selected="Application.Main">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="Main" />
@@ -77,6 +89,20 @@
       <option name="presentableId" value="Default" />
       <updated>1695747863585</updated>
     </task>
+    <task id="LOCAL-00001" summary="ADD: ColorPrinter Class">
+      <option name="closed" value="true" />
+      <created>1695844972835</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1695844972835</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+    <MESSAGE value="ADD: ColorPrinter Class" />
+    <option name="LAST_COMMIT_MESSAGE" value="ADD: ColorPrinter Class" />
   </component>
 </project>
