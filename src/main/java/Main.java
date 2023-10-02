@@ -3,8 +3,5 @@ public class Main {
 
         Lottery lottery = new Lottery();
         lottery.run();
-
-
-
     }
 }
