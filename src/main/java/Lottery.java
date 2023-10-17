@@ -4,6 +4,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.FileOutputStream;
+import java.sql.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -17,23 +18,79 @@ public class Lottery {
     List<String> days;
     List<String> defNames;
 
-    public Lottery() {
+
+
+    public Lottery() throws SQLException {
         this.participants = new ArrayList<Person>();
         this.days = new ArrayList<>(Arrays.asList("Pazartesi", "Sali", "Carsamba", "Persembe", "Cuma", "Cumartesi"));
-        this.defNames = new ArrayList<>(Arrays.asList("Sinan", "Eda", "Emrullah", "Ümmü", "Cahit"));
+//      this.defNames = new ArrayList<>(Arrays.asList("Eda", "Emrullah", "Ümmü", "Cahit", "Nurullah", "Ertugrul"));
+
+        this.defNames = new ArrayList<>();
+
+        Connection con = DriverManager.
+                getConnection("jdbc:postgresql://localhost:5432/lottery","techpront", "password");
+        Statement st = con.createStatement();
+        ResultSet rst = st.executeQuery("SELECT * FROM names");
+
+        while (rst.next()){
+            int userID = rst.getInt("ID");
+            this.defNames.add(userID + " " + rst.getString("name"));
+        }
+        st.close();
+        con.close();
+
     }
 
     boolean isRun = true;
 
-    public void addParticipant() {
+    public void addParticipant() throws SQLException {
+
+        Connection con = DriverManager.
+                    getConnection("jdbc:postgresql://localhost:5432/lottery","techpront", "password");
+
         Scanner inp = new Scanner(System.in);
         System.out.println("Isim Giriniz...");
         String name = inp.nextLine();
 
         Person participant = new Person(name);
         this.participants.add(participant);
+        String insertQuery = "INSERT INTO names(name) VALUES(?)";
+        try (PreparedStatement preparedStatement = con.prepareStatement(insertQuery)) {
+            preparedStatement.setString(1, name); // 1 numaralı parametreye name değişkenini ekler
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         System.out.println("Isim Eklendi...");
+
+        con.close();
     }
+    private void deleteParticipant() throws SQLException {
+        Connection con = DriverManager.
+                getConnection("jdbc:postgresql://localhost:5432/lottery", "techpront", "password");
+
+        Scanner inp = new Scanner(System.in);
+        System.out.println("Silmek istediğiniz kişi ID'sini Giriniz.");
+        int delId = inp.nextInt();
+
+        String deleteQuery = "DELETE FROM names WHERE id = ?";
+        try (PreparedStatement preparedStatement = con.prepareStatement(deleteQuery)) {
+            preparedStatement.setInt(1, delId); // 1 numaralı parametreye delId'yi ekler
+            int rowsAffected = preparedStatement.executeUpdate();
+            if (rowsAffected > 0) {
+                System.out.println("İsim başarıyla silindi.");
+                // ArrayList'den de silme işlemi
+                //this.defNames.removeIf(name -> name.getId() == delId); // TODO: Person classina id ekleyip proje yapisini id tabanli yap
+            } else {
+                System.out.println("İsim silinemedi.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        con.close();
+    }
+
 
     public void defaultNames() {
         for (String w : defNames) {
@@ -50,13 +107,25 @@ public class Lottery {
 
     }
 
-    public void listParticipants() {
-        //ColorPrinter.printColorfulText("DENEME"+" ".repeat(5),ColorPrinter.AQUA,ColorPrinter.MAGENTA_BACKGROUND);
-        System.out.println("Katılımcı Listesi:");
-        for (Person participant : participants) {
-            System.out.println(participant.getName());
+    public void listParticipants() throws SQLException {
+        Connection con = DriverManager.
+                getConnection("jdbc:postgresql://localhost:5432/lottery","techpront", "password");
+        Statement st = con.createStatement();
+
+        ResultSet rst = st.executeQuery("SELECT * FROM names");
+        ColorPrinter.printColorfulText("Katılımcı Listesi:", ColorPrinter.MAGENTA);
+
+        int counter = 0;
+        while (rst.next()){
+            int userID = rst.getInt("ID");
+            System.out.println(userID + " " + rst.getString("name"));
+            counter++;
         }
-        System.out.println(this.participants.size());
+
+        System.out.println("Toplam : " + counter + " kişi");
+        st.close();
+        con.close();
+
 
     }
 
@@ -130,17 +199,18 @@ public class Lottery {
         }
     }
 
-    public void displayMenu() {
+    public void displayMenu() throws SQLException {
 
         Scanner inp = new Scanner(System.in);
 
         while (isRun) {
             ColorPrinter.printColorfulText("MENU", ColorPrinter.PINK);
             ColorPrinter.printColorfulText("1. Yeni Katılımcı Ekle", ColorPrinter.YELLOW);
-            ColorPrinter.printColorfulText("2. Çekilişi Başlat", ColorPrinter.YELLOW);
-            ColorPrinter.printColorfulText("3. Katılımcıları Listele", ColorPrinter.YELLOW);
-            ColorPrinter.printColorfulText("4. Katılımcıları Günlere Dağıt", ColorPrinter.YELLOW);
-            ColorPrinter.printColorfulText("5. Sonuçları Kaydet", ColorPrinter.YELLOW);
+            ColorPrinter.printColorfulText("2. Katılımcı Sil", ColorPrinter.YELLOW);
+            ColorPrinter.printColorfulText("3. Çekilişi Başlat", ColorPrinter.YELLOW);
+            ColorPrinter.printColorfulText("4. Katılımcıları Listele", ColorPrinter.YELLOW);
+            ColorPrinter.printColorfulText("5. Katılımcıları Günlere Dağıt", ColorPrinter.YELLOW);
+            ColorPrinter.printColorfulText("6. Sonuçları Kaydet", ColorPrinter.YELLOW);
             ColorPrinter.printColorfulText("0. Çıkış", ColorPrinter.YELLOW);
 
 
@@ -151,15 +221,18 @@ public class Lottery {
                     addParticipant();
                     break;
                 case 2:
-                    selectRandomPerson();
+                    deleteParticipant();
                     break;
                 case 3:
-                    listParticipants();
+                    selectRandomPerson();
                     break;
                 case 4:
-                    distributeParticipantsToWeekDays();
+                    listParticipants();
                     break;
                 case 5:
+                    distributeParticipantsToWeekDays();
+                    break;
+                case 6:
                     saveResult();
                     break;
                 case 0:
@@ -172,7 +245,7 @@ public class Lottery {
         }
     }
 
-    public void run() {
+    public void run() throws SQLException {
         defaultNames();
         displayMenu();
     }
