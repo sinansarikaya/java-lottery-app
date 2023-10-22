@@ -18,35 +18,23 @@ public class Lottery {
     List<String> days;
     List<String> defNames;
 
+    private LotteryRepository repo = new LotteryRepository();
 
 
-    public Lottery() throws SQLException {
+    public Lottery() {
         this.participants = new ArrayList<Person>();
         this.days = new ArrayList<>(Arrays.asList("Pazartesi", "Sali", "Carsamba", "Persembe", "Cuma", "Cumartesi"));
 //      this.defNames = new ArrayList<>(Arrays.asList("Eda", "Emrullah", "Ümmü", "Cahit", "Nurullah", "Ertugrul"));
-
         this.defNames = new ArrayList<>();
 
-        Connection con = DriverManager.
-                getConnection("jdbc:postgresql://localhost:5432/lottery","techpront", "password");
-        Statement st = con.createStatement();
-        ResultSet rst = st.executeQuery("SELECT * FROM names");
-
-        while (rst.next()){
-            int userID = rst.getInt("ID");
-            this.defNames.add(userID + " " + rst.getString("name"));
-        }
-        st.close();
-        con.close();
-
+        // TODO: Kisileri eklemeyi constructorda bakacagiz
+        //  this.defNames.add(userID + " " + rst.getString("name"));
+        repo.getAll();
     }
 
     boolean isRun = true;
 
-    public void addParticipant() throws SQLException {
-
-        Connection con = DriverManager.
-                    getConnection("jdbc:postgresql://localhost:5432/lottery","techpront", "password");
+    public void addParticipant() {
 
         Scanner inp = new Scanner(System.in);
         System.out.println("Isim Giriniz...");
@@ -54,41 +42,19 @@ public class Lottery {
 
         Person participant = new Person(name);
         this.participants.add(participant);
-        String insertQuery = "INSERT INTO names(name) VALUES(?)";
-        try (PreparedStatement preparedStatement = con.prepareStatement(insertQuery)) {
-            preparedStatement.setString(1, name); // 1 numaralı parametreye name değişkenini ekler
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+
+        repo.saveParticipant(name);
         System.out.println("Isim Eklendi...");
 
-        con.close();
     }
+
     private void deleteParticipant() throws SQLException {
-        Connection con = DriverManager.
-                getConnection("jdbc:postgresql://localhost:5432/lottery", "techpront", "password");
 
         Scanner inp = new Scanner(System.in);
         System.out.println("Silmek istediğiniz kişi ID'sini Giriniz.");
         int delId = inp.nextInt();
 
-        String deleteQuery = "DELETE FROM names WHERE id = ?";
-        try (PreparedStatement preparedStatement = con.prepareStatement(deleteQuery)) {
-            preparedStatement.setInt(1, delId); // 1 numaralı parametreye delId'yi ekler
-            int rowsAffected = preparedStatement.executeUpdate();
-            if (rowsAffected > 0) {
-                System.out.println("İsim başarıyla silindi.");
-                // ArrayList'den de silme işlemi
-                //this.defNames.removeIf(name -> name.getId() == delId); // TODO: Person classina id ekleyip proje yapisini id tabanli yap
-            } else {
-                System.out.println("İsim silinemedi.");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        con.close();
+        repo.delete(delId);
     }
 
 
@@ -107,28 +73,6 @@ public class Lottery {
 
     }
 
-    public void listParticipants() throws SQLException {
-        Connection con = DriverManager.
-                getConnection("jdbc:postgresql://localhost:5432/lottery","techpront", "password");
-        Statement st = con.createStatement();
-
-        ResultSet rst = st.executeQuery("SELECT * FROM names");
-        ColorPrinter.printColorfulText("Katılımcı Listesi:", ColorPrinter.MAGENTA);
-
-        int counter = 0;
-        while (rst.next()){
-            int userID = rst.getInt("ID");
-            System.out.println(userID + " " + rst.getString("name"));
-            counter++;
-        }
-
-        System.out.println("Toplam : " + counter + " kişi");
-        st.close();
-        con.close();
-
-
-    }
-
     public void distributeParticipantsToWeekDays() {
         LocalDate dateNow = LocalDate.now();
 
@@ -143,7 +87,7 @@ public class Lottery {
         participantData = new ArrayList<>();
 
         for (Person participant : participants) {
-            if(dtfd.format(dateNow).equals("Sunday")){
+            if (dtfd.format(dateNow).equals("Sunday")) {
                 dateNow = dateNow.plusDays(1);
             }
             String formattedMyCurrentDate = dtft.format(dateNow);
@@ -227,7 +171,7 @@ public class Lottery {
                     selectRandomPerson();
                     break;
                 case 4:
-                    listParticipants();
+                    repo.getAll();
                     break;
                 case 5:
                     distributeParticipantsToWeekDays();
