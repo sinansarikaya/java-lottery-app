@@ -60,7 +60,9 @@ public class LotteryRepository {
 
             while (rst.next()) {
                 int userID = rst.getInt("ID");
-                System.out.println(userID + " " + rst.getString("name"));
+                String userName = rst.getString("name");
+                System.out.println(userID + " " + userName);
+                Lottery.defNames.add(userID + " " + userName);
                 counter++;
             }
         } catch (SQLException e) {

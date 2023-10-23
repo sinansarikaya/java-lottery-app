@@ -16,7 +16,7 @@ public class Lottery {
     private List<Map<String, String>> participantData; // Data structure to store participant data
     private List<Person> participants;
     List<String> days;
-    List<String> defNames;
+    public static List<String> defNames;
 
     private LotteryRepository repo = new LotteryRepository();
 
@@ -27,8 +27,6 @@ public class Lottery {
 //      this.defNames = new ArrayList<>(Arrays.asList("Eda", "Emrullah", "Ümmü", "Cahit", "Nurullah", "Ertugrul"));
         this.defNames = new ArrayList<>();
 
-        // TODO: Kisileri eklemeyi constructorda bakacagiz
-        //  this.defNames.add(userID + " " + rst.getString("name"));
         repo.getAll();
     }
 
