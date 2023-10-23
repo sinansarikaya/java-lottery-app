@@ -37,24 +37,20 @@ public class Lottery {
         Scanner inp = new Scanner(System.in);
         System.out.println("Isim Giriniz...");
         String name = inp.nextLine();
-
-        Person participant = new Person(name);
-        this.participants.add(participant);
-
         repo.saveParticipant(name);
+        String lastParticipant = defNames.stream().reduce((first, second) -> second).orElse(null);
+        Person participant = new Person(lastParticipant);
+        this.participants.add(participant);
         System.out.println("Isim Eklendi...");
-
     }
 
-    private void deleteParticipant() throws SQLException {
-
+    private void deleteParticipant() {
         Scanner inp = new Scanner(System.in);
         System.out.println("Silmek istediğiniz kişi ID'sini Giriniz.");
         int delId = inp.nextInt();
 
         repo.delete(delId);
     }
-
 
     public void defaultNames() {
         for (String w : defNames) {
@@ -68,7 +64,6 @@ public class Lottery {
         int randNum = random.nextInt(this.participants.size());
         Person winner = participants.get(randNum);
         System.out.println("Winner : " + winner.getName());
-
     }
 
     public void distributeParticipantsToWeekDays() {
@@ -85,7 +80,7 @@ public class Lottery {
         participantData = new ArrayList<>();
 
         for (Person participant : participants) {
-            if (dtfd.format(dateNow).equals("Sunday")) {
+            if (dtfd.format(dateNow).equals("Sunday") || dtfd.format(dateNow).equals("Pazar")) {
                 dateNow = dateNow.plusDays(1);
             }
             String formattedMyCurrentDate = dtft.format(dateNow);
@@ -154,7 +149,6 @@ public class Lottery {
             ColorPrinter.printColorfulText("5. Katılımcıları Günlere Dağıt", ColorPrinter.YELLOW);
             ColorPrinter.printColorfulText("6. Sonuçları Kaydet", ColorPrinter.YELLOW);
             ColorPrinter.printColorfulText("0. Çıkış", ColorPrinter.YELLOW);
-
 
             int choice = inp.nextInt();
 

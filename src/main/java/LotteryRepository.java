@@ -1,4 +1,5 @@
 import java.sql.*;
+
 //TODO: Bu sinif static olabilir mi? Neden static degil.
 public class LotteryRepository {
     private Connection conn;
@@ -31,12 +32,18 @@ public class LotteryRepository {
     }
 
     public void saveParticipant(String name) {
-        String sql = "INSERT INTO names(name) VALUES(?)";
+        String sql = "INSERT INTO names(name) VALUES(?) RETURNING id";
         setConnection();
         setPreparedStatement(sql);
+        int generatedId = -1;
         try {
-            prst.setString(1, name); // 1 numaralı parametreye name değişkenini ekler
-            prst.executeUpdate();
+            prst.setString(1, name);
+            ResultSet rs = prst.executeQuery();
+            if (rs.next()) {
+                generatedId = rs.getInt("id");
+//                System.out.println("Yeni eklenen kişinin ID'si: " + generatedId);
+                Lottery.defNames.add(generatedId + " " + name);
+            }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         } finally {
@@ -47,10 +54,10 @@ public class LotteryRepository {
                 System.out.println(e.getMessage());
             }
         }
-
     }
 
-    public void getAll(){
+
+    public void getAll() {
         setConnection();
         setStatement();
         int counter = 0;
@@ -95,7 +102,7 @@ public class LotteryRepository {
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
-        }finally {
+        } finally {
             try {
                 prst.close();
                 conn.close();
