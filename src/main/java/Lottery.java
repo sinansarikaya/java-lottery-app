@@ -13,12 +13,27 @@ public class Lottery {
     //TODO: fix it
     //   public Scanner inp = new Scanner(System.in);
 
+
     private List<Map<String, String>> participantData; // Data structure to store participant data
     private List<Person> participants;
     List<String> days;
     public static List<String> defNames;
-
     private LotteryRepository repo = new LotteryRepository();
+    private int counter = 0;
+
+
+    public void counterArtir() {
+        this.counter++;
+    }
+
+    public void counterAzalt() {
+        this.counter--;
+        // counter 0 dan kucuk olamaz if ile
+    }
+
+    public void countersifirla() {
+        this.counter = 0;
+    }
 
 
     public Lottery() {
@@ -33,7 +48,6 @@ public class Lottery {
     boolean isRun = true;
 
     public void addParticipant() {
-
         Scanner inp = new Scanner(System.in);
         System.out.println("Isim Giriniz...");
         String name = inp.nextLine();
@@ -117,6 +131,7 @@ public class Lottery {
                 Cell cell = row.createCell(columnNumber++);
                 cell.setCellValue(data.get(key));
             }
+            repo.saveDays(data.get("Name"), data.get("Day"), data.get("Date"));
         }
 
         try (FileOutputStream outputStream = new FileOutputStream("./participantWorkbook.xlsx")) {
@@ -136,6 +151,11 @@ public class Lottery {
         }
     }
 
+    public void listDistributedDays() {
+        int numberOfParticipants = participants.size();
+        repo.getDays(numberOfParticipants);
+    }
+
     public void displayMenu() throws SQLException {
 
         Scanner inp = new Scanner(System.in);
@@ -147,7 +167,8 @@ public class Lottery {
             ColorPrinter.printColorfulText("3. Çekilişi Başlat", ColorPrinter.YELLOW);
             ColorPrinter.printColorfulText("4. Katılımcıları Listele", ColorPrinter.YELLOW);
             ColorPrinter.printColorfulText("5. Katılımcıları Günlere Dağıt", ColorPrinter.YELLOW);
-            ColorPrinter.printColorfulText("6. Sonuçları Kaydet", ColorPrinter.YELLOW);
+            ColorPrinter.printColorfulText("6. Dağıtılmış Günleri Listele", ColorPrinter.YELLOW);
+            ColorPrinter.printColorfulText("7. Sonuçları Kaydet", ColorPrinter.YELLOW);
             ColorPrinter.printColorfulText("0. Çıkış", ColorPrinter.YELLOW);
 
             int choice = inp.nextInt();
@@ -169,6 +190,9 @@ public class Lottery {
                     distributeParticipantsToWeekDays();
                     break;
                 case 6:
+                    listDistributedDays();
+                    break;
+                case 7:
                     saveResult();
                     break;
                 case 0:

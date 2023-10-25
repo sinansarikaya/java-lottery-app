@@ -32,8 +32,8 @@ public class LotteryRepository {
     }
 
     public void saveParticipant(String name) {
-        String sql = "INSERT INTO names(name) VALUES(?) RETURNING id";
         setConnection();
+        String sql = "INSERT INTO names(name) VALUES(?) RETURNING id";
         setPreparedStatement(sql);
         int generatedId = -1;
         try {
@@ -56,6 +56,57 @@ public class LotteryRepository {
         }
     }
 
+    public void saveDays(String name, String days, String date) {
+        setConnection();
+        String saveQuery = "INSERT INTO results(name, days, date) VALUES(?, ?, ?)";
+        setPreparedStatement(saveQuery);
+        try {
+            prst.setString(1, name);
+            prst.setString(2, days);
+            prst.setString(3, date);
+            int rowsAffected = prst.executeUpdate();
+            if (rowsAffected == 1) {
+                System.out.println("Veri başarıyla veritabanına kaydedildi.");
+            } else {
+                System.out.println("Veri kaydedilirken bir hata oluştu.");
+            }
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } finally {
+            try {
+                prst.close();
+                conn.close();
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+    }
+
+    public void getDays(int size) {
+        setConnection();
+        String getQuery = "SELECT * FROM results ORDER BY id DESC LIMIT ?";
+        setPreparedStatement(getQuery);
+        try {
+            prst.setInt(1, size);
+            ResultSet rs = prst.executeQuery();
+            while (rs.next()) {
+                String name = rs.getString("name");
+                String days = rs.getString("days");
+                String date = rs.getString("date");
+                System.out.println(name + " - " + days + " - " + date);
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } finally {
+            try {
+                prst.close();
+                conn.close();
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+    }
 
     public void getAll() {
         setConnection();
@@ -82,7 +133,6 @@ public class LotteryRepository {
             } catch (SQLException e) {
                 System.out.println(e.getMessage());
             }
-
         }
     }
 
@@ -110,6 +160,5 @@ public class LotteryRepository {
                 System.out.println(e.getMessage());
             }
         }
-
     }
 }
