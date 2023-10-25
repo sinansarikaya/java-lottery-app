@@ -4,42 +4,21 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.FileOutputStream;
-import java.sql.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class Lottery {
-    //TODO: fix it
-    //   public Scanner inp = new Scanner(System.in);
-
 
     private List<Map<String, String>> participantData; // Data structure to store participant data
     private List<Person> participants;
     List<String> days;
     public static List<String> defNames;
     private LotteryRepository repo = new LotteryRepository();
-    private int counter = 0;
-
-
-    public void counterArtir() {
-        this.counter++;
-    }
-
-    public void counterAzalt() {
-        this.counter--;
-        // counter 0 dan kucuk olamaz if ile
-    }
-
-    public void countersifirla() {
-        this.counter = 0;
-    }
-
 
     public Lottery() {
         this.participants = new ArrayList<Person>();
         this.days = new ArrayList<>(Arrays.asList("Pazartesi", "Sali", "Carsamba", "Persembe", "Cuma", "Cumartesi"));
-//      this.defNames = new ArrayList<>(Arrays.asList("Eda", "Emrullah", "Ümmü", "Cahit", "Nurullah", "Ertugrul"));
         this.defNames = new ArrayList<>();
 
         repo.getAll();
@@ -111,8 +90,6 @@ public class Lottery {
 
             participantData.add(data);
             dateNow = dateNow.plusDays(1);
-
-//            dayIndex = (dayIndex + 1) % days.size();
         }
     }
 
@@ -123,7 +100,6 @@ public class Lottery {
         createHeaderRow(ws);
         int rowNumber = 1;
 
-        // Iterate through participant data and write to Excel
         for (Map<String, String> data : participantData) {
             Row row = ws.createRow(rowNumber++);
             int columnNumber = 0;
@@ -133,7 +109,6 @@ public class Lottery {
             }
             repo.saveDays(data.get("Name"), data.get("Day"), data.get("Date"));
         }
-
         try (FileOutputStream outputStream = new FileOutputStream("./participantWorkbook.xlsx")) {
             wb.write(outputStream);
             ColorPrinter.printColorfulText("Sonuçlar excel dosyasına kayıt edildi", ColorPrinter.GREEN);
@@ -156,7 +131,7 @@ public class Lottery {
         repo.getDays(numberOfParticipants);
     }
 
-    public void displayMenu() throws SQLException {
+    public void displayMenu() {
 
         Scanner inp = new Scanner(System.in);
 
@@ -205,7 +180,7 @@ public class Lottery {
         }
     }
 
-    public void run() throws SQLException {
+    public void run() {
         defaultNames();
         displayMenu();
     }
