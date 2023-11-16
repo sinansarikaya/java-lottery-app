@@ -16,11 +16,12 @@ public class Lottery {
     public static List<String> defNames;
     private LotteryRepository repo = new LotteryRepository();
 
+
+
     public Lottery() {
         this.participants = new ArrayList<Person>();
         this.days = new ArrayList<>(Arrays.asList("Pazartesi", "Sali", "Carsamba", "Persembe", "Cuma", "Cumartesi"));
         this.defNames = new ArrayList<>();
-
         repo.getAll();
     }
 
@@ -60,7 +61,7 @@ public class Lottery {
     }
 
     public void distributeParticipantsToWeekDays() {
-        LocalDate dateNow = LocalDate.now();
+        LocalDate dateNow = LocalDate.now().plusDays(1);
 
         DateTimeFormatter dtft = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         DateTimeFormatter dtfd = DateTimeFormatter.ofPattern("EEEE");
@@ -132,9 +133,7 @@ public class Lottery {
     }
 
     public void displayMenu() {
-
         Scanner inp = new Scanner(System.in);
-
         while (isRun) {
             ColorPrinter.printColorfulText("MENU", ColorPrinter.PINK);
             ColorPrinter.printColorfulText("1. Yeni Katılımcı Ekle", ColorPrinter.YELLOW);
